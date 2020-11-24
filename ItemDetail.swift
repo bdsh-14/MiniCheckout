@@ -12,9 +12,6 @@ class Items: Codable, Equatable {
     static func == (lhs: Items, rhs: Items) -> Bool {
         return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
     }
-    
-    
-
     var id: Int
     var shipmentItems: [Item]
 }
@@ -22,7 +19,7 @@ class Items: Codable, Equatable {
 class Item: Codable {
     var id: Int
     var name: String
-  //  var price: Int
+    var price: String
     var brand: String
     var imageUrl: URL
     var size: String
