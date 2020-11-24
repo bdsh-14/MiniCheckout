@@ -12,11 +12,39 @@ class CheckoutViewController: UIViewController {
     
     var itemTableView: UITableView!
     var items: [Item] = []
-
+    private let mobileService: MobileService_Protocol
+    
+    init(mobileService: MobileService_Protocol = MobileService()) {
+        self.mobileService = mobileService
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Checkout Items"
         view.backgroundColor = .systemPink
+        
+        loadItems()
+    }
+    
+    func loadItems() {
+        mobileService.getItems { (result) in
+            switch result {
+            case let .success(items):
+                self.items = items
+                for i in items {
+                    print(i.name)
+                }
+                print(items)
+                
+            case let .failure(error):
+                print(error)
+            }
+        }
     }
     
     
@@ -31,9 +59,7 @@ class CheckoutViewController: UIViewController {
         itemTableView.dataSource = self
         itemTableView.rowHeight = UITableView.automaticDimension
         itemTableView.translatesAutoresizingMaskIntoConstraints = false
-        
     }
-    
 }
 
 extension CheckoutViewController: UITableViewDataSource {

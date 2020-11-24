@@ -8,11 +8,22 @@
 
 import Foundation
 
+class Items: Codable, Equatable {
+    static func == (lhs: Items, rhs: Items) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
+    
+    
+
+    var id: Int
+    var shipmentItems: [Item]
+}
+
 class Item: Codable {
     var id: Int
     var name: String
-    var price: Float
+  //  var price: Int
     var brand: String
-    var image_url: URL
+    var imageUrl: URL
     var size: String
 }
