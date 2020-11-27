@@ -5,6 +5,7 @@ import SDWebImage
 class BeginCheckoutViewController: UIViewController {
     private let alertPresenter: AlertPresenter_Proto
     private let mobileService: MobileService_Protocol
+    lazy var customModalTransitioningDelegate = CustomModalPresentationManager()
     
     lazy var beginCheckoutView: BeginCheckoutView = {
         return BeginCheckoutView()
@@ -38,8 +39,16 @@ class BeginCheckoutViewController: UIViewController {
 //                               message: "This feature is not yet implemented.",
 //                               dismissButtonTitle: "OK")
         
+      //  let checkoutNavController = UINavigationController()
+     //   let vc = checkoutNavController.children[0] as! CheckoutViewController
+        
         let vc = CheckoutViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
+        vc.transitioningDelegate = customModalTransitioningDelegate
+        vc.modalPresentationStyle = .custom
+        customModalTransitioningDelegate.currentPresentationStyle = .partiallyRevealed
+        customModalTransitioningDelegate.isPresentingFromContainerView = true
+        self.present(vc, animated: true, completion: nil)
+    //    self.navigationController?.pushViewController(vc, animated: true)
     }
     
     private func loadCustomer() {

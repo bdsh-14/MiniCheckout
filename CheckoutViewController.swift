@@ -39,8 +39,6 @@ class CheckoutViewController: UIViewController {
                 for i in items {
                     print(i.name)
                 }
-                print(items)
-                
             case let .failure(error):
                 print(error)
             }
