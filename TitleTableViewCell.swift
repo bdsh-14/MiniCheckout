@@ -12,12 +12,14 @@ class TitleTableViewCell: UITableViewCell {
     
     static let reuseIdentifier: String = "headingBodyTableViewCell"
     
-    var label = UILabel()
+    var brandLabel = UILabel()
+    var nameLabel = UILabel()
     let padding: CGFloat = 20.0
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(label)
+        contentView.addSubview(brandLabel)
+        contentView.addSubview(nameLabel)
         setup()
     }
     
@@ -27,18 +29,34 @@ class TitleTableViewCell: UITableViewCell {
     
     func setup() {
         selectionStyle = .none
-        label.translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = .systemGray
-        label.numberOfLines = 0
-        label.textAlignment = .left
-        label.lineBreakMode = .byWordWrapping
-        label.font = UIFont.preferredFont(forTextStyle: .title2)
+        brandLabel.translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = .clear
+        brandLabel.numberOfLines = 0
+        brandLabel.textAlignment = .left
+        brandLabel.lineBreakMode = .byWordWrapping
+        brandLabel.font = UIFont.preferredFont(forTextStyle: .title2)
+        
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = .clear
+        nameLabel.numberOfLines = 0
+        nameLabel.textAlignment = .left
+        nameLabel.lineBreakMode = .byWordWrapping
+        nameLabel.font = UIFont.preferredFont(forTextStyle: .title2)
+        
+        
         
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
-            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
-            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
-            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding)
+            brandLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
+            brandLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            brandLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
+            brandLabel.bottomAnchor.constraint(equalTo: nameLabel.topAnchor, constant: -8),
+            
+            nameLabel.topAnchor.constraint(equalTo: brandLabel.bottomAnchor, constant: padding),
+            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: padding),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -padding),
+            nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding),
+            
+            
         ])
     }
 }
