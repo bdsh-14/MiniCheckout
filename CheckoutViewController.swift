@@ -73,6 +73,8 @@ class CheckoutViewController: UIViewController {
         ])
         
         itemTableView.register(TitleTableViewCell.self, forCellReuseIdentifier: TitleTableViewCell.reuseIdentifier)
+        itemTableView.register(ItemImageTableViewCell.self, forCellReuseIdentifier: ItemImageTableViewCell.reuseIdentifier)
+
         itemTableView.tableFooterView = UIView()
         itemTableView.separatorStyle = .none
         itemTableView.dataSource = self
@@ -151,13 +153,22 @@ class CheckoutViewController: UIViewController {
 extension CheckoutViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 2
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.reuseIdentifier, for: indexPath) as! TitleTableViewCell
-        cell.brandLabel.text = items?[itemNum].brand
-        cell.nameLabel.text = items?[itemNum].name
-        return cell
+        guard let items = items else { return UITableViewCell() }
+        switch indexPath.row {
+        case 0:
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.reuseIdentifier, for: indexPath) as! TitleTableViewCell
+            cell.brandLabel.text = items[itemNum].brand
+            cell.nameLabel.text = items[itemNum].name
+            return cell
+        default:
+            let cell = tableView.dequeueReusableCell(withIdentifier: ItemImageTableViewCell.reuseIdentifier, for: indexPath) as! ItemImageTableViewCell
+            cell.imageUrl = items[itemNum].imageUrl
+            return cell
+        }
     }
 }

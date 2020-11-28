@@ -21,6 +21,6 @@ class Item: Codable {
     var name: String
     var price: String
     var brand: String
-    var imageUrl: URL
+    var imageUrl: String
     var size: String
 }
