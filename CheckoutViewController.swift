@@ -34,7 +34,7 @@ class CheckoutViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Checkout Items"
-        let button = UIBarButtonItem(title: "Begin Checkout", style: .plain, target: self, action: #selector(backPressed))
+        let button = UIBarButtonItem(title: "Checkout", style: .plain, target: self, action: #selector(backPressed))
         self.navigationItem.leftBarButtonItem = button
         createTableView()
         setupNavigationButtons()
@@ -164,21 +164,25 @@ class CheckoutViewController: UIViewController {
 extension CheckoutViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 3
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let items = items else { return UITableViewCell() }
         switch indexPath.row {
-        case 0:
-            
+        case 0: // Brand and name
             let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.reuseIdentifier, for: indexPath) as! TitleTableViewCell
             cell.brandLabel.text = items[itemNum].brand
             cell.nameLabel.text = items[itemNum].name
             return cell
-        default:
+        case 1: // Image
             let cell = tableView.dequeueReusableCell(withIdentifier: ItemImageTableViewCell.reuseIdentifier, for: indexPath) as! ItemImageTableViewCell
             cell.imageUrl = items[itemNum].imageUrl
+            return cell
+        default: // size and price
+            let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.reuseIdentifier, for: indexPath) as! TitleTableViewCell
+            cell.brandLabel.text = "Size: \(items[itemNum].size)"
+            cell.nameLabel.text = " Price: $\(items[itemNum].price)"
             return cell
         }
     }

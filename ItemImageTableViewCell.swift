@@ -31,8 +31,6 @@ class ItemImageTableViewCell: UITableViewCell {
         }
     }
     
-    
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(productImageView)
@@ -47,8 +45,8 @@ class ItemImageTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             productImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
             productImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-           // productImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding),
-            productImageView.heightAnchor.constraint(equalToConstant: 200)
+            productImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding),
+           // productImageView.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
 }
