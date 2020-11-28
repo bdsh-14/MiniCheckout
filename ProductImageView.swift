@@ -28,8 +28,8 @@ class ProductImageView: UIImageView {
         contentMode = .scaleAspectFit
         clipsToBounds = true
         image = placeHolderImage
-        heightAnchor.constraint(equalToConstant: 150).isActive = true
-        widthAnchor.constraint(equalToConstant: 150).isActive = true
+        heightAnchor.constraint(equalToConstant: 200).isActive = true
+        widthAnchor.constraint(equalToConstant: 200).isActive = true
         translatesAutoresizingMaskIntoConstraints = false
     }
 }

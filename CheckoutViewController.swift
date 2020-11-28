@@ -34,10 +34,17 @@ class CheckoutViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Checkout Items"
+        let button = UIBarButtonItem(title: "Begin Checkout", style: .plain, target: self, action: #selector(backPressed))
+        self.navigationItem.leftBarButtonItem = button
         createTableView()
         setupNavigationButtons()
         loadItems()
         
+    }
+    
+    @objc func backPressed() {
+        self.navigationController?.popToRootViewController(animated: true)
+       // dismiss(animated: true, completion: nil)
     }
     
     func loadItems() {
@@ -126,7 +133,9 @@ class CheckoutViewController: UIViewController {
             vc.modalPresentationStyle = .currentContext
             customModalTransitioningDelegate.currentPresentationStyle = .partiallyRevealed
             customModalTransitioningDelegate.isPresentingFromContainerView = true
-            self.present(vc, animated: true, completion: nil)
+            self.navigationController?.popViewController(animated: true)
+
+           // self.present(vc, animated: true, completion: nil)
         } else if itemNum == 0 {
             leftButton.isHidden = true
         }
@@ -142,7 +151,9 @@ class CheckoutViewController: UIViewController {
             vc.modalPresentationStyle = .custom
             customModalTransitioningDelegate.currentPresentationStyle = .partiallyRevealed
             customModalTransitioningDelegate.isPresentingFromContainerView = true
-            self.present(vc, animated: true, completion: nil)
+            self.navigationController?.pushViewController(vc, animated: true)
+
+          //  self.present(vc, animated: true, completion: nil)
         } else {
             rightButton.isHidden = true
         }

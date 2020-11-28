@@ -43,11 +43,13 @@ class BeginCheckoutViewController: UIViewController {
      //   let vc = checkoutNavController.children[0] as! CheckoutViewController
         
         let vc = CheckoutViewController()
+   
         vc.transitioningDelegate = customModalTransitioningDelegate
         vc.modalPresentationStyle = .custom
         customModalTransitioningDelegate.currentPresentationStyle = .partiallyRevealed
         customModalTransitioningDelegate.isPresentingFromContainerView = true
-        self.present(vc, animated: true, completion: nil)
+        self.navigationController?.pushViewController(vc, animated: true)
+       // self.present(vc, animated: true, completion: nil)
     }
     
     private func loadCustomer() {
