@@ -19,6 +19,7 @@ class CheckoutViewController: UIViewController {
     var itemNum = 0
     var item: Item?
     private let mobileService: MobileService_Protocol
+    lazy var customModalTransitioningDelegate = CustomModalPresentationManager()
     
     
     init(mobileService: MobileService_Protocol = MobileService()) {
@@ -58,6 +59,7 @@ class CheckoutViewController: UIViewController {
     func createTableView() {
         view.addSubview(itemTableView)
         view.addSubview(bottomView)
+        bottomView.backgroundColor = .white
         NSLayoutConstraint.activate([
             itemTableView.topAnchor.constraint(equalTo: view.topAnchor),
             itemTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -69,10 +71,6 @@ class CheckoutViewController: UIViewController {
             bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             bottomView.heightAnchor.constraint(equalToConstant: 150)
         ])
-        
-        bottomView.backgroundColor = .systemTeal
-        itemTableView.backgroundColor = .systemPurple
-      
         
         itemTableView.register(TitleTableViewCell.self, forCellReuseIdentifier: TitleTableViewCell.reuseIdentifier)
         itemTableView.tableFooterView = UIView()
@@ -90,9 +88,9 @@ class CheckoutViewController: UIViewController {
         
         if #available(iOS 13.0, *) {
             let leftButtonImage = UIImage(systemName: "chevron.left.circle.fill",
-                                          withConfiguration: UIImage.SymbolConfiguration(pointSize: 70, weight: .heavy, scale: .medium))?.withTintColor(.systemGreen)
+                                          withConfiguration: UIImage.SymbolConfiguration(pointSize: 60, weight: .heavy, scale: .medium))?.withTintColor(.green)
             let rightButtonImage = UIImage(systemName: "chevron.right.circle.fill",
-                                           withConfiguration: UIImage.SymbolConfiguration(pointSize: 70, weight: .heavy, scale: .medium))?.withTintColor(.systemGreen)
+                                           withConfiguration: UIImage.SymbolConfiguration(pointSize: 60, weight: .heavy, scale: .medium))?.withTintColor(.green)
             leftButton.setImage(leftButtonImage, for: .normal)
             rightButton.setImage(rightButtonImage, for: .normal)
         } else {
@@ -107,8 +105,48 @@ class CheckoutViewController: UIViewController {
             rightButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor),
             rightButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -20),
         ])
+        guard let itemsCount = items?.count else { return }
+        if itemNum == itemsCount - 1 {
+            rightButton.isHidden = true
+        } else if itemNum == 0 {
+            leftButton.isHidden = true
+        }
+        rightButton.addTarget(self, action: #selector(rightButtonTapped), for: .touchUpInside)
+        leftButton.addTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc func leftButtonTapped(_ sender: UIButton) {
+        if itemNum > 0 {
+            itemNum -= 1
+            let vc = CheckoutViewController()
+            vc.itemNum = itemNum
+            vc.transitioningDelegate = customModalTransitioningDelegate
+            vc.modalPresentationStyle = .currentContext
+            customModalTransitioningDelegate.currentPresentationStyle = .partiallyRevealed
+            customModalTransitioningDelegate.isPresentingFromContainerView = true
+            self.present(vc, animated: true, completion: nil)
+        } else if itemNum == 0 {
+            leftButton.isHidden = true
+        }
+    }
+    
+    @objc func rightButtonTapped(_ sender: UIButton) {
+        guard let items = items else { return }
+        if itemNum < items.count - 1 {
+            itemNum += 1
+            let vc = CheckoutViewController()
+            vc.itemNum = itemNum
+            vc.transitioningDelegate = customModalTransitioningDelegate
+            vc.modalPresentationStyle = .custom
+            customModalTransitioningDelegate.currentPresentationStyle = .partiallyRevealed
+            customModalTransitioningDelegate.isPresentingFromContainerView = true
+            self.present(vc, animated: true, completion: nil)
+        } else {
+            rightButton.isHidden = true
+        }
     }
 }
+    
 
 extension CheckoutViewController: UITableViewDataSource {
 

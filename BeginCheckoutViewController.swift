@@ -48,7 +48,6 @@ class BeginCheckoutViewController: UIViewController {
         customModalTransitioningDelegate.currentPresentationStyle = .partiallyRevealed
         customModalTransitioningDelegate.isPresentingFromContainerView = true
         self.present(vc, animated: true, completion: nil)
-    //    self.navigationController?.pushViewController(vc, animated: true)
     }
     
     private func loadCustomer() {
