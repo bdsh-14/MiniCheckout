@@ -10,9 +10,14 @@ import UIKit
 
 class CheckoutViewController: UIViewController {
     
-    var itemTableView: UITableView!
-    var items: [Item] = []
+    var itemTableView = UITableView()
+    var bottomView = UIView()
+    
+    var items: [Item]?
+    var itemNum = 0
+    var item: Item?
     private let mobileService: MobileService_Protocol
+    
     
     init(mobileService: MobileService_Protocol = MobileService()) {
         self.mobileService = mobileService
@@ -26,9 +31,9 @@ class CheckoutViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Checkout Items"
-        view.backgroundColor = .systemPink
-        
+        createTableView()
         loadItems()
+        
     }
     
     func loadItems() {
@@ -36,6 +41,7 @@ class CheckoutViewController: UIViewController {
             switch result {
             case let .success(items):
                 self.items = items
+                self.itemTableView.reloadData()
                 for i in items {
                     print(i.name)
                 }
@@ -47,27 +53,45 @@ class CheckoutViewController: UIViewController {
     
     
     func createTableView() {
-        itemTableView = UITableView(frame: view.bounds, style: .plain)
         view.addSubview(itemTableView)
-        navigationController?.navigationBar.prefersLargeTitles = false
+        view.addSubview(bottomView)
+        
+        NSLayoutConstraint.activate([
+            itemTableView.topAnchor.constraint(equalTo: view.topAnchor),
+            itemTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            itemTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            itemTableView.bottomAnchor.constraint(equalTo: bottomView.topAnchor),
+            
+            bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            bottomView.heightAnchor.constraint(equalToConstant: 150)
+        ])
+        
+        bottomView.backgroundColor = .systemTeal
+        itemTableView.backgroundColor = .systemPurple
+        
+        
+        itemTableView.register(TitleTableViewCell.self, forCellReuseIdentifier: TitleTableViewCell.reuseIdentifier)
         itemTableView.tableFooterView = UIView()
-        itemTableView.estimatedRowHeight = 120
         itemTableView.separatorStyle = .none
-        itemTableView.allowsSelection = false
         itemTableView.dataSource = self
         itemTableView.rowHeight = UITableView.automaticDimension
+        itemTableView.estimatedRowHeight = 100
         itemTableView.translatesAutoresizingMaskIntoConstraints = false
+        bottomView.translatesAutoresizingMaskIntoConstraints = false
     }
 }
 
 extension CheckoutViewController: UITableViewDataSource {
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        return 1
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.reuseIdentifier, for: indexPath) as! TitleTableViewCell
+        cell.label.text = items?[0].brand
         return cell
     }
-    
 }
