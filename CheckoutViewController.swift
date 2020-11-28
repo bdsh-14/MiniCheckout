@@ -88,9 +88,9 @@ class CheckoutViewController: UIViewController {
         
         if #available(iOS 13.0, *) {
             let leftButtonImage = UIImage(systemName: "chevron.left.circle.fill",
-                                          withConfiguration: UIImage.SymbolConfiguration(pointSize: 60, weight: .heavy, scale: .medium))?.withTintColor(.green)
+                                          withConfiguration: UIImage.SymbolConfiguration(pointSize: 70, weight: .heavy, scale: .medium))?.withTintColor(.systemGreen)
             let rightButtonImage = UIImage(systemName: "chevron.right.circle.fill",
-                                           withConfiguration: UIImage.SymbolConfiguration(pointSize: 60, weight: .heavy, scale: .medium))?.withTintColor(.green)
+                                           withConfiguration: UIImage.SymbolConfiguration(pointSize: 70, weight: .heavy, scale: .medium))?.withTintColor(.systemGreen)
             leftButton.setImage(leftButtonImage, for: .normal)
             rightButton.setImage(rightButtonImage, for: .normal)
         } else {
@@ -105,12 +105,12 @@ class CheckoutViewController: UIViewController {
             rightButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor),
             rightButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -20),
         ])
-        guard let itemsCount = items?.count else { return }
-        if itemNum == itemsCount - 1 {
-            rightButton.isHidden = true
-        } else if itemNum == 0 {
-            leftButton.isHidden = true
-        }
+//        guard let itemsCount = items?.count else { ret
+//        if itemNum == items?.count ?? 0 - 1 {
+//            rightButton.isHidden = true
+//        } else if itemNum == 0 {
+//            leftButton.isHidden = true
+//        }
         rightButton.addTarget(self, action: #selector(rightButtonTapped), for: .touchUpInside)
         leftButton.addTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
     }
