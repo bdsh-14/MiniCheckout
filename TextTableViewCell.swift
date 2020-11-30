@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TitleTableViewCell: UITableViewCell {
+class TextTableViewCell: UITableViewCell {
     
     static let reuseIdentifier: String = "headingBodyTableViewCell"
     

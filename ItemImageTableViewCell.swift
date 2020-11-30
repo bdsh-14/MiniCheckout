@@ -46,7 +46,6 @@ class ItemImageTableViewCell: UITableViewCell {
             productImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: padding),
             productImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             productImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -padding),
-           // productImageView.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
 }

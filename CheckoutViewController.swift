@@ -14,15 +14,16 @@ class CheckoutViewController: UIViewController {
     var bottomView = UIView()
     var rightButton = LeftRightButton(frame: .zero)
     var leftButton = LeftRightButton(frame: .zero)
-    
     var items: [Item]?
     var itemNum = 0
     var item: Item?
     private let mobileService: MobileService_Protocol
+    private let alertPresenter: AlertPresenter_Proto
     lazy var customModalTransitioningDelegate = CustomModalPresentationManager()
     
-    
-    init(mobileService: MobileService_Protocol = MobileService()) {
+    init(alertPresenter: AlertPresenter_Proto = AlertPresenter(),
+         mobileService: MobileService_Protocol = MobileService()) {
+        self.alertPresenter = alertPresenter
         self.mobileService = mobileService
         super.init(nibName: nil, bundle: nil)
     }
@@ -34,12 +35,15 @@ class CheckoutViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Checkout Items"
-        let button = UIBarButtonItem(title: "Checkout", style: .plain, target: self, action: #selector(backPressed))
-        self.navigationItem.leftBarButtonItem = button
+        let barbutton = UIBarButtonItem(title: "Checkout", style: .plain, target: self, action: #selector(backPressed))
+        self.navigationItem.leftBarButtonItem = barbutton
         createTableView()
         setupNavigationButtons()
         loadItems()
-        
+        if itemNum == 0 {
+            leftButton.isHidden = true
+        }
+        rightButton.isHidden = (items?.count == itemNum + 1)
     }
     
     @objc func backPressed() {
@@ -62,7 +66,7 @@ class CheckoutViewController: UIViewController {
         }
     }
     
-    
+    //caching
     func createTableView() {
         view.addSubview(itemTableView)
         view.addSubview(bottomView)
@@ -79,7 +83,7 @@ class CheckoutViewController: UIViewController {
             bottomView.heightAnchor.constraint(equalToConstant: 150)
         ])
         
-        itemTableView.register(TitleTableViewCell.self, forCellReuseIdentifier: TitleTableViewCell.reuseIdentifier)
+        itemTableView.register(TextTableViewCell.self, forCellReuseIdentifier: TextTableViewCell.reuseIdentifier)
         itemTableView.register(ItemImageTableViewCell.self, forCellReuseIdentifier: ItemImageTableViewCell.reuseIdentifier)
 
         itemTableView.tableFooterView = UIView()
@@ -94,12 +98,11 @@ class CheckoutViewController: UIViewController {
     func setupNavigationButtons() {
         bottomView.addSubview(leftButton)
         bottomView.addSubview(rightButton)
-        
         if #available(iOS 13.0, *) {
             let leftButtonImage = UIImage(systemName: "chevron.left.circle.fill",
-                                          withConfiguration: UIImage.SymbolConfiguration(pointSize: 70, weight: .heavy, scale: .medium))?.withTintColor(.systemGreen)
+                                          withConfiguration: UIImage.SymbolConfiguration(pointSize: 70, weight: .heavy, scale: .medium))?.withTintColor(.cyan)
             let rightButtonImage = UIImage(systemName: "chevron.right.circle.fill",
-                                           withConfiguration: UIImage.SymbolConfiguration(pointSize: 70, weight: .heavy, scale: .medium))?.withTintColor(.systemGreen)
+                                           withConfiguration: UIImage.SymbolConfiguration(pointSize: 70, weight: .heavy, scale: .medium))?.withTintColor(.cyan)
             leftButton.setImage(leftButtonImage, for: .normal)
             rightButton.setImage(rightButtonImage, for: .normal)
         } else {
@@ -110,16 +113,10 @@ class CheckoutViewController: UIViewController {
         NSLayoutConstraint.activate([
             leftButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor),
             leftButton.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 20),
-            
             rightButton.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor),
             rightButton.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -20),
         ])
-//        guard let itemsCount = items?.count else { ret
-//        if itemNum == items?.count ?? 0 - 1 {
-//            rightButton.isHidden = true
-//        } else if itemNum == 0 {
-//            leftButton.isHidden = true
-//        }
+       
         rightButton.addTarget(self, action: #selector(rightButtonTapped), for: .touchUpInside)
         leftButton.addTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
     }
@@ -154,12 +151,15 @@ class CheckoutViewController: UIViewController {
             self.navigationController?.pushViewController(vc, animated: true)
 
           //  self.present(vc, animated: true, completion: nil)
-        } else {
+        } else if itemNum == items.count - 1 {
+                    alertPresenter.present(from: self,
+                                           title: "End of list",
+                                           message: "",
+                                           dismissButtonTitle: "OK")
             rightButton.isHidden = true
         }
     }
 }
-    
 
 extension CheckoutViewController: UITableViewDataSource {
 
@@ -171,7 +171,7 @@ extension CheckoutViewController: UITableViewDataSource {
         guard let items = items else { return UITableViewCell() }
         switch indexPath.row {
         case 0: // Brand and name
-            let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.reuseIdentifier, for: indexPath) as! TitleTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: TextTableViewCell.reuseIdentifier, for: indexPath) as! TextTableViewCell
             cell.brandLabel.text = items[itemNum].brand
             cell.nameLabel.text = items[itemNum].name
             return cell
@@ -180,8 +180,9 @@ extension CheckoutViewController: UITableViewDataSource {
             cell.imageUrl = items[itemNum].imageUrl
             return cell
         default: // size and price
-            let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.reuseIdentifier, for: indexPath) as! TitleTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: TextTableViewCell.reuseIdentifier, for: indexPath) as! TextTableViewCell
             cell.brandLabel.text = "Size: \(items[itemNum].size)"
+            
             cell.nameLabel.text = " Price: $\(items[itemNum].price)"
             return cell
         }
